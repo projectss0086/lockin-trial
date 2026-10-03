@@ -83,7 +83,7 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ border: "1.5px solid var(--teal)", borderRadius: 14, padding: "13px 15px", marginBottom: 14, background: "var(--teal-soft)" }}>
-          <div style={{ fontSize: 14, fontWeight: 800, color: "var(--teal-d)" }}>🎉 창립 멤버 무료 체험 중</div>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "var(--teal-d)" }}>🎉 vip 원장님 무료 체험 중</div>
           <div style={{ fontSize: 12.5, color: "#3f4a46", lineHeight: 1.65, marginTop: 6 }}>
             결제 없이 무료 이용권으로 자유롭게 써보세요. 써보신 후기를 남기면 정식 오픈 때 쓸 수 있는 <b>평생 할인코드</b>를 드려요.
           </div>
