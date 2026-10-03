@@ -22,7 +22,7 @@ export default function PricingPage() {
     <div className="phone">
       <div className="top">
         <Link href="/dashboard" className="back">‹</Link>
-        <h2>창립 멤버 무료 체험</h2>
+        <h2>VIP 원장님 무료 체험</h2>
       </div>
       <div className="pad">
         {credits !== null && (
@@ -35,7 +35,7 @@ export default function PricingPage() {
         <div style={{ border: "1.5px solid var(--teal)", borderRadius: 16, padding: "18px 16px", marginTop: 14, background: "var(--teal-soft)" }}>
           <div style={{ fontSize: 16, fontWeight: 800, color: "var(--teal-d)" }}>🎉 지금은 무료 체험 기간이에요</div>
           <div style={{ fontSize: 13.5, color: "#3f4a46", lineHeight: 1.7, marginTop: 8 }}>
-            창립 멤버 원장님을 위해 <b>결제 없이</b> 자물쇠 피드백을 열어드렸어요.
+            VIP 원장님을 위해 <b>결제 없이</b> 자물쇠 피드백을 열어드렸어요.
             넉넉하게 <b>무료 30회</b>를 드렸으니, 마음껏 써보세요.
           </div>
         </div>
@@ -57,7 +57,7 @@ export default function PricingPage() {
         </div>
 
         <div style={{ fontSize: 11.5, color: "#9aa6a1", marginTop: 14, textAlign: "center", lineHeight: 1.6 }}>
-          철옹성 프로젝트 · 자물쇠 피드백 창립 멤버 체험
+          철옹성 프로젝트 · 자물쇠 피드백 VIP 원장님 체험
         </div>
       </div>
       <Footer />
