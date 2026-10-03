@@ -8,7 +8,7 @@ export default function Home() {
     <div className="phone">
       <div className="pad">
         {/* 서비스 소개 (히어로) */}
-        <div style={{ textAlign: "center", marginTop: 8 }}>
+          <div style={{ fontSize: 13.5, color: "#3f4a46", lineHeight: 1.7, marginTop: 8, wordBreak: "keep-all" }}>
           <div className="lock" style={{ fontSize: 40 }}>🔒</div>
           <div className="h1" style={{ textAlign: "center" }}>자물쇠 피드백</div>
           <div className="lead" style={{ textAlign: "center" }}>
