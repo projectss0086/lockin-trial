@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "자물쇠 피드백",
+  title: "자물쇠 피드백 trial",
   description: "질문에 답만 하면, 학부모 피드백이 완성됩니다.",
 };
 
