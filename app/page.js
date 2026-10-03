@@ -25,12 +25,10 @@ export default function Home() {
           <div style={{ fontSize: 16, fontWeight: 800, color: "var(--teal-d)" }}>🎉 VIP 원장님 무료 체험</div>
           <div style={{ fontSize: 13.5, color: "#3f4a46", lineHeight: 1.7, marginTop: 8 }}>
             초대받으신 원장님, 환영합니다.<br />
-            지금 가입하면 <b>무료 이용권 30회</b>를 드려요. 
-              결제 없이 마음껏 써보세요.
+            지금 가입하면 <b>무료 이용권 30회</b>를 드려요. 결제 없이 마음껏 써보세요.
           </div>
           <div style={{ fontSize: 12.5, color: "#5a6763", lineHeight: 1.7, marginTop: 10, wordBreak: "keep-all" }}>
-            써보신 후기를 남기면, 정식 오픈 때 쓸 수 있는 
-              <b>평생 할인코드</b>까지 드려요.
+            써보신 후기를 남기면, 정식 오픈 때 쓸 수 있는 <b>평생 할인코드</b>까지 드려요.
           </div>
           <Link href="/signup" className="btn primary" style={{ display: "block", textAlign: "center", textDecoration: "none", marginTop: 14 }}>학원 등록하고 무료로 시작하기 →</Link>
         </div>
