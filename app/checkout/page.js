@@ -15,7 +15,7 @@ export default function CheckoutPage() {
           <div style={{ fontSize: 30 }}>🎁</div>
           <div style={{ fontSize: 16, fontWeight: 800, color: "var(--teal-d)", marginTop: 8 }}>지금은 결제가 없어요</div>
           <div style={{ fontSize: 13.5, color: "#3f4a46", lineHeight: 1.7, marginTop: 10 }}>
-            창립 멤버 원장님을 위한 <b>무료 체험 기간</b>이에요.
+            VIP 원장님을 위한 <b>무료 체험 기간</b>이에요.
             넉넉한 무료 이용권으로 마음껏 써보세요. 결제는 정식 오픈 후에 열려요.
           </div>
         </div>
