@@ -53,7 +53,7 @@ export default function SignupPage() {
         phone: f.phone.trim(),
         address: f.address.trim(),
         login_id: loginId,
-        credits: 10, // 첫 가입 무료 크레딧
+   credits: 30, // 체험단 무료 이용권 30회
       });
     }
     setBusy(false);
