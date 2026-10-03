@@ -50,7 +50,7 @@ export default function LoginPage() {
         </div>
 
         <div style={{ width: "100%", border: "1.5px solid var(--teal)", background: "var(--teal-soft)", borderRadius: 12, padding: "13px 15px", marginTop: 24, fontSize: 13, color: "var(--teal-d)", fontWeight: 700, lineHeight: 1.6, textAlign: "center" }}>
-          🎉 창립 멤버 무료 체험 중<br />
+          🎉 vip 원장님 무료 체험 중<br />
           <span style={{ fontWeight: 500, color: "#5a6763" }}>아래로 로그인하거나, 처음이시면 ‘학원 등록’을 해주세요.</span>
         </div>
       </div>
