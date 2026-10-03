@@ -82,17 +82,20 @@ export default function DashboardPage() {
           {academy?.owner_name ? `${academy.owner_name} 원장님, ` : ""}학생을 눌러 이번 달 피드백을 시작하세요.
         </div>
 
+        <div style={{ border: "1.5px solid var(--teal)", borderRadius: 14, padding: "13px 15px", marginBottom: 14, background: "var(--teal-soft)" }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "var(--teal-d)" }}>🎉 창립 멤버 무료 체험 중</div>
+          <div style={{ fontSize: 12.5, color: "#3f4a46", lineHeight: 1.65, marginTop: 6 }}>
+            결제 없이 무료 이용권으로 자유롭게 써보세요. 써보신 후기를 남기면 정식 오픈 때 쓸 수 있는 <b>평생 할인코드</b>를 드려요.
+          </div>
+          <button className="pbtn" style={{ marginTop: 11 }} onClick={() => router.push("/review")}>✍️ 후기 남기고 할인코드 받기 →</button>
+        </div>
+
         <div className="credbar">
           <span style={{ fontSize: 18 }}>🎟️</span>
           <span className="cb-n">
             남은 이용 횟수 <b>{(academy?.sub_credits ?? 0) + (academy?.credits ?? 0)}</b>회
-            {academy?.plan && (
-              <span style={{ display: "block", fontSize: 11, color: "#8b9a94", fontWeight: 500, marginTop: 1 }}>
-                구독 {academy?.sub_credits ?? 0}회 · 추가 {academy?.credits ?? 0}회
-              </span>
-            )}
           </span>
-          <button className="cb-btn" onClick={() => router.push("/pricing")}>🛒 이용권 구매 · 구독</button>
+          <button className="cb-btn" onClick={() => router.push("/pricing")}>체험 혜택 보기</button>
         </div>
 
         {isAdmin && (
