@@ -49,24 +49,9 @@ export default function LoginPage() {
           질문에 답만 하면,<br />학부모 피드백이 완성됩니다
         </div>
 
-        {payNext && (
-          <div style={{ width: "100%", border: "1.5px solid var(--teal)", background: "var(--teal-soft)", borderRadius: 12, padding: "12px 15px", marginTop: 20, fontSize: 13, color: "var(--teal-d)", fontWeight: 700, lineHeight: 1.6 }}>
-            🔒 결제를 진행하려면 먼저 로그인해 주세요.<br />
-            <span style={{ fontWeight: 500, color: "#5a6763" }}>로그인하면 고르시던 결제 화면으로 바로 이어집니다.</span>
-          </div>
-        )}
-
-        {/* 결제 심사용 테스트 계정 (심사 후 삭제 예정) — 가운데 안내 */}
-        <div style={{ width: "100%", border: "1.5px dashed #c3cec9", borderRadius: 12, padding: "13px 15px", background: "#F7F9F8", marginTop: 24 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, color: "#5a6763", marginBottom: 6 }}>🔎 결제 심사용 테스트 계정</div>
-          <div style={{ fontSize: 14, color: "var(--ink)", lineHeight: 1.8 }}>
-            아이디 <b>테스트학원0000</b><br />비밀번호 <b>123456</b>
-          </div>
-          <button type="button" className="btn" style={{ marginTop: 10, padding: "8px 0", fontSize: 13, background: "none", color: "var(--teal-d)", border: "1.5px solid var(--teal)" }}
-            onClick={() => { setLoginId("테스트학원0000"); setPw("123456"); }}>
-            테스트 계정으로 채우기
-          </button>
-          <div style={{ fontSize: 11.5, color: "#9aa6a1", marginTop: 8 }}><b>심사 완료 후 삭제 예정</b>입니다.</div>
+        <div style={{ width: "100%", border: "1.5px solid var(--teal)", background: "var(--teal-soft)", borderRadius: 12, padding: "13px 15px", marginTop: 24, fontSize: 13, color: "var(--teal-d)", fontWeight: 700, lineHeight: 1.6, textAlign: "center" }}>
+          🎉 창립 멤버 무료 체험 중<br />
+          <span style={{ fontWeight: 500, color: "#5a6763" }}>아래로 로그인하거나, 처음이시면 ‘학원 등록’을 해주세요.</span>
         </div>
       </div>
       <div className="foot">
