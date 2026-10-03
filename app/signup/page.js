@@ -30,6 +30,7 @@ export default function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email: idToEmail(loginId),
       password: f.pw,
+      options: { data: { display_name: f.name.trim(), phone_number: f.phone.trim() } },
     });
     if (error) {
       setBusy(false);
