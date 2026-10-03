@@ -20,9 +20,9 @@ export default function Home() {
           학원 원장님이 간단한 질문에 답하면, AI가 학부모님께 보낼 <b>수려한 피드백 문자</b>를 완성해 줘요.
         </div>
 
-        {/* 창립 멤버 무료 체험 안내 */}
+        {/* vip 원장님 무료 체험 안내 */}
         <div style={{ background: "var(--teal-soft)", border: "1.5px solid var(--teal)", borderRadius: 16, padding: "18px 16px", marginTop: 18, textAlign: "center" }}>
-          <div style={{ fontSize: 16, fontWeight: 800, color: "var(--teal-d)" }}>🎉 창립 멤버 무료 체험</div>
+          <div style={{ fontSize: 16, fontWeight: 800, color: "var(--teal-d)" }}>🎉 vip 원장님 무료 체험</div>
           <div style={{ fontSize: 13.5, color: "#3f4a46", lineHeight: 1.7, marginTop: 8 }}>
             초대받으신 원장님, 환영합니다.<br />
             지금 가입하면 <b>무료 이용권 30회</b>를 드려요. 결제 없이 마음껏 써보세요.
