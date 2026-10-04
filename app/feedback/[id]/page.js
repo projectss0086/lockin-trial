@@ -102,7 +102,7 @@ export default function FeedbackPage() {
   async function generate() {
     if (totalCredits <= 0) {
       setStep(4); setErr(""); setFeedback("");
-      setCreditErr("이용 횟수가 부족해요. 이용권을 구매하면 바로 만들 수 있어요.");
+      setCreditErr("체험 이용권을 모두 사용했어요.");
       return;
     }
     setErr(""); setCreditErr(""); setBusy(true); setStep(4); setFeedback("");
@@ -116,7 +116,7 @@ export default function FeedbackPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data.code === "no_credit") { setCreditErr("이용 횟수가 부족해요. 이용권을 구매하면 바로 만들 수 있어요."); setBusy(false); return; }
+        if (data.code === "no_credit") { setCreditErr("체험 이용권을 모두 사용했어요."); setBusy(false); return; }
         setErr(data.error || "생성 실패"); setBusy(false); return;
       }
       setFeedback(data.feedback);
@@ -266,10 +266,15 @@ export default function FeedbackPage() {
             {busy && !feedback && <GenLoading />}
             {err && <div className="err" style={{ marginTop: 20 }}>오류: {err}</div>}
             {creditErr && !feedback && (
-              <div style={{ textAlign: "center", marginTop: 30 }}>
-                <div style={{ fontSize: 40 }}>🎟️</div>
-                <div className="err" style={{ marginTop: 8 }}>{creditErr}</div>
-                <button className="btn primary" style={{ marginTop: 14 }} onClick={() => router.push("/pricing")}>이용권 구매하러 가기</button>
+              <div style={{ textAlign: "center", marginTop: 30, padding: "0 6px" }}>
+                <div style={{ fontSize: 46 }}>🎟️</div>
+                <div className="h1" style={{ textAlign: "center", marginTop: 12 }}>이용권을 다 쓰셨나요?</div>
+                <div className="lead" style={{ textAlign: "center", marginTop: 10 }}>
+                  그럼 후기를 작성해주세요.<br />
+                  유료 버전에서 쓸 수 있는{" "}
+                  <b style={{ color: "var(--teal-d)" }}>구독료 최대 30% 평생 할인권</b>을 받을 수 있어요.
+                </div>
+                <button className="btn primary lg" style={{ marginTop: 22 }} onClick={() => router.push("/review")}>✍️ 후기 쓰고 할인권 받기 →</button>
               </div>
             )}
             {feedback && !editing && (
