@@ -172,4 +172,150 @@ export default function FeedbackPage() {
       <div className="top">
         <button className="back" onClick={() => step > 1 && step < 4 ? setStep(step - 1) : router.push("/dashboard")}>‹</button>
         <h2>{student.name}</h2>
-        <span
+        <span className="spacer" />
+        <span className="pill">{["학습", "선택", "장면", "완성"][step - 1]}</span>
+      </div>
+      <div className="steps">
+        {[1, 2, 3, 4].map((n) => <i key={n} className={step >= n ? "on" : ""} />)}
+      </div>
+
+      {step === 1 && (
+        <>
+          <div className="pad">
+            <div className="h1">학습 이야기</div>
+            <div className="lead">이번 달 학습을 짧게 답해주세요. 단어·구절이면 충분해요.</div>
+            <label className="fl">무엇을 배웠나요?</label>
+            <input className="tf" value={learn.what} onChange={(e) => setLearn({ ...learn, what: e.target.value })} placeholder="예: 분수의 나눗셈" />
+            <label className="fl">아이가 어떻게 반응했나요?</label>
+            <input className="tf" value={learn.react} onChange={(e) => setLearn({ ...learn, react: e.target.value })} placeholder="예: 처음엔 헷갈리다 감을 잡음" />
+            <label className="fl">선생님 소감 또는 앞으로의 학습계획 <span style={{ color: "#b7c2bd" }}>(비워도 돼요)</span></label>
+            <input className="tf" value={learn.opinion} onChange={(e) => setLearn({ ...learn, opinion: e.target.value })} placeholder="예: 다음 달부터 응용문제 비중을 늘릴 예정 / 비워두면 AI가 채웁니다" />
+          </div>
+          <div className="foot">
+            <button className="btn primary lg" disabled={!learn.what.trim() || !learn.react.trim()} onClick={() => setStep(2)}>다음</button>
+          </div>
+        </>
+      )}
+
+      {step === 2 && (
+        <>
+          <div className="pad">
+            <div className="lead" style={{ marginBottom: 16 }}>둘 중 <b>하나만</b> 고르세요. 이번 달에 어울리는 쪽이면 됩니다.</div>
+            <div className={"fork" + (fork === "growth" ? " sel" : "")} onClick={() => setFork("growth")}>
+              <div className="ic">🌱</div><h3>성장한 순간</h3>
+              <p>아이의 마음이 자란 순간이 있었어요. (끈기·자신감·스스로 하려는 태도 등)</p>
+            </div>
+            <div className={"fork" + (fork === "episode" ? " sel" : "")} onClick={() => setFork("episode")}>
+              <div className="ic">💛</div><h3>귀여운 에피소드</h3>
+              <p>공부와 상관없이, 그냥 귀엽거나 인상적인 순간이 있었어요.</p>
+            </div>
+          </div>
+          <div className="foot">
+            <button className="btn primary lg" disabled={!fork} onClick={() => setStep(3)}>다음</button>
+          </div>
+        </>
+      )}
+
+      {step === 3 && (
+        <>
+          <div className="pad">
+            <div className="h1">{fork === "growth" ? "🌱 성장한 순간" : "💛 귀여운 에피소드"}</div>
+            <label className="fl">{fork === "growth" ? "성장을 느낀 장면은?" : "귀여웠거나 인상적인 장면은?"}</label>
+            <input className="tf" value={scene} onChange={(e) => setScene(e.target.value)}
+              placeholder={fork === "growth" ? "예: 지루한 연산도 끝까지 붙잡고 풀어냄" : "예: 속상해하는 친구를 토닥이며 달래줌"} />
+
+            <label className="fl" style={{ marginTop: 18 }}>선생님은 이때 아이에 대해 어떤 감정을 느꼈나요?</label>
+            <textarea className="tf" rows={2} value={emotion} onChange={(e) => setEmotion(e.target.value)}
+              placeholder="예: 속상해하면서도 다음을 다짐하는 모습이 짠하면서도 대견했어요" />
+            <div className="note" style={{ background: "#F4F8F6", border: "1px solid #dbe6e1", color: "#5a6763" }}>
+              💡 <div>딱 떠오르지 않으면, 아래에서 눌러 담아도 돼요. (여러 개 골라도 되고, 골라서 문장으로 다듬어도 좋아요.)</div>
+            </div>
+            <div className="emogrp"><div className="emohead">😊 긍정</div>
+              <div className="chips">
+                {POS.map((em) => (
+                  <div key={em} className="chip" onClick={() => addEmo(em)}>{em}</div>
+                ))}
+              </div>
+            </div>
+            <div className="emogrp"><div className="emohead">🥺 부정</div>
+              <div className="chips">
+                {NEG.map((em) => (
+                  <div key={em} className="chip neg" onClick={() => addEmo(em)}>{em}</div>
+                ))}
+              </div>
+            </div>
+
+            <label className="fl" style={{ marginTop: 20 }}>앞으로의 계획 <span style={{ color: "#b7c2bd" }}>(생략 가능)</span></label>
+            <input className="tf" value={plan} onChange={(e) => setPlan(e.target.value)}
+              placeholder={fork === "growth" ? "예: 발표 기회를 더 주며 자신감을 키워줄 계획" : "예: 이런 다정함을 칭찬하며 계속 북돋아줄 계획"} />
+            <div style={{ fontSize: 12, color: "#9aa6a1", marginTop: 5 }}>
+              적어두면 그 방향으로, 비우면 AI가 알아서 미래 비전을 담아요.
+            </div>
+          </div>
+          <div className="foot">
+            <button className="btn primary lg"
+              disabled={!scene.trim() || !emotion.trim()}
+              onClick={generate}>✨ 자물쇠 피드백 만들기</button>
+          </div>
+        </>
+      )}
+
+      {step === 4 && (
+        <>
+          <div className="pad">
+            {busy && !feedback && <GenLoading />}
+            {err && <div className="err" style={{ marginTop: 20 }}>오류: {err}</div>}
+            {creditErr && !feedback && (
+              <div style={{ textAlign: "center", marginTop: 30 }}>
+                <div style={{ fontSize: 40 }}>🎟️</div>
+                <div className="err" style={{ marginTop: 8 }}>{creditErr}</div>
+                <button className="btn primary" style={{ marginTop: 14 }} onClick={() => router.push("/pricing")}>이용권 구매하러 가기</button>
+              </div>
+            )}
+            {feedback && !editing && (
+              <>
+                <div className="kakao">💬 완성된 문자</div>
+                <div className="msg">{feedback}</div>
+                <div className="note">🔒 <div><b>보내기 전 확인</b> — 복사해서 <b>원장님 카톡이나 문자</b>로 학부모님께 붙여넣어 보내세요. 직접 고칠 수도 있어요.</div></div>
+                {student.parent_phone && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#5a6763", margin: "10px 2px" }}>
+                    👪 학부모 번호 <b style={{ color: "var(--ink)" }}>{student.parent_phone}</b>
+                    <button className="linkbtn" style={{ width: "auto", padding: 0, fontSize: 12.5 }}
+                      onClick={() => navigator.clipboard?.writeText(student.parent_phone)}>번호 복사</button>
+                  </div>
+                )}
+                <button className="btn ghost" onClick={() => setEditing(true)}>✏️ 직접 수정</button>
+              </>
+            )}
+            {feedback && editing && (
+              <>
+                <div className="kakao">✏️ 직접 수정</div>
+                <textarea className="editbox" value={feedback} onChange={(e) => setFeedback(e.target.value)} />
+                <button className="btn ghost" style={{ marginTop: 10 }} onClick={() => setEditing(false)}>수정 완료</button>
+              </>
+            )}
+          </div>
+          {feedback && !editing && (
+            <div className="foot">
+              <button className="btn primary lg" onClick={copyMsg}>
+                {copied ? "✓ 복사됐어요 — 카톡·문자에 붙여넣으세요" : "📋 문자 복사하기"}
+              </button>
+              <div style={{ height: 10 }} />
+              <button className="btn" style={{ background: "none", color: "var(--teal-d)", border: "1.5px solid var(--teal)" }} disabled={busy} onClick={saveAndFinish}>
+                {busy ? "저장 중…" : "붙여넣어 보냈어요 · 발송 완료 →"}
+              </button>
+              <div style={{ fontSize: 11.5, color: "#9aa6a1", textAlign: "center", marginTop: 8 }}>
+                이용권은 문자를 만들 때 이미 1회 차감됐어요 · 발송 완료는 이력 저장용이에요
+              </div>
+            </div>
+          )}
+          {err && !feedback && (
+            <div className="foot">
+              <button className="btn primary lg" onClick={() => setStep(3)}>← 돌아가서 다시</button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
