@@ -58,7 +58,7 @@ export default function SignupPage() {
       });
     }
     setBusy(false);
-    router.push("/dashboard");
+    router.push("/welcome");
   }
 
   return (
