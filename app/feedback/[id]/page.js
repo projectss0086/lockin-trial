@@ -9,10 +9,10 @@ const NEG = ["안쓰러움", "안타까움", "속상함", "미안함", "걱정�
 
 // 생성 중 로딩 화면에 자동으로 순서대로 바뀌며 뜨는 문구 (인지-감정-관계)
 const GEN_MSGS = [
-  "수업이 잘 진행되고 있다고 인지하게 할 메세지를 쓰고 있어요",
-  "학원에 대한 좋은 감정을 느끼게 할 메세지를 쓰고 있어요",
-  "학부모와 좋은 관계를 만들 메세지를 쓰고 있어요",
-  "이제 거의 다 되었어요..!",
+  ["수업이 잘 진행되고 있다고 ", { b: "인지" }, "하게 할 메세지를 쓰고 있어요"],
+  ["학원에 대한 좋은 ", { b: "감정" }, "을 느끼게 할 메세지를 쓰고 있어요"],
+  ["학부모와 좋은 ", { b: "관계" }, "를 만들 메세지를 쓰고 있어요"],
+  ["이제 거의 다 되었어요..!"],
 ];
 
 function GenLoading() {
@@ -26,7 +26,11 @@ function GenLoading() {
   return (
     <div style={{ textAlign: "center", padding: "48px 18px 30px" }}>
       <div className="genspinner" />
-      <div key={i} className="genmsg">{GEN_MSGS[i]}</div>
+      <div key={i} className="genmsg">
+        {GEN_MSGS[i].map((p, k) =>
+          typeof p === "object" && p && p.b ? <b key={k}>{p.b}</b> : <span key={k}>{p}</span>
+        )}
+      </div>
       <div className="gendots">
         {GEN_MSGS.map((_, k) => (
           <span key={k} className={"gendot" + (k <= i ? " on" : "")} />
@@ -40,6 +44,7 @@ function GenLoading() {
         .genmsg{font-size:15.5px;line-height:1.6;color:#3a4744;font-weight:600;
           word-break:keep-all;max-width:280px;margin:0 auto;min-height:48px;
           animation:genfade .5s ease;}
+        .genmsg b{font-weight:800;color:var(--teal-d,#0f766e);}
         @keyframes genfade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
         .gendots{display:flex;gap:6px;justify-content:center;margin-top:20px;}
         .gendot{width:6px;height:6px;border-radius:50%;background:#dbe6e1;transition:all .3s;}
