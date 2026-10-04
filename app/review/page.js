@@ -22,6 +22,7 @@ export default function ReviewPage() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [done, setDone] = useState(null);
+  const [codeCopied, setCodeCopied] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -29,6 +30,14 @@ export default function ReviewPage() {
       if (!session) { router.replace("/login"); return; }
     })();
   }, [router]);
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(done.code);
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 2500);
+    } catch (e) {}
+  }
 
   async function submit() {
     setErr("");
@@ -68,16 +77,32 @@ export default function ReviewPage() {
       <div className="phone">
         <div className="top"><button className="back" onClick={() => router.push("/dashboard")}>‹</button><h2>발급 완료</h2></div>
         <div className="pad">
-          <div style={{ textAlign: "center", border: "1.5px solid var(--teal)", background: "var(--teal-soft)", borderRadius: 16, padding: "22px 16px", marginTop: 14 }}>
-            <div style={{ fontSize: 30 }}>🎟️</div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: "var(--teal-d)", marginTop: 8 }}>평생 {done.discount}% 할인 코드</div>
-            <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: 1, color: "#20302B", margin: "12px 0", userSelect: "all" }}>{done.code}</div>
-            <div style={{ fontSize: 12.5, color: "#3f4a46", lineHeight: 1.7 }}>
-              감사합니다! 이 코드는 <b>정식 오픈</b> 때 결제 화면에 입력하면 <b>평생 {done.discount}%</b> 할인이 적용돼요.
-              코드를 캡처해두세요.
+          <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FFF4E5", border: "1.5px solid #F0C089", borderRadius: 12, padding: "12px 14px", marginTop: 14 }}>
+            <span style={{ fontSize: 18 }}>⚠️</span>
+            <div style={{ fontSize: 13, color: "#8A5A1A", lineHeight: 1.6, fontWeight: 700 }}>
+              이 코드는 지금 화면에서만 보여요.<br />
+              <span style={{ fontWeight: 800 }}>지금 꼭 캡처해서 보관</span>해주세요!
             </div>
           </div>
-          <button className="btn primary lg" style={{ marginTop: 18 }} onClick={() => router.push("/dashboard")}>대시보드로 돌아가기</button>
+
+          <div style={{ textAlign: "center", border: "2px solid var(--teal)", background: "var(--teal-soft)", borderRadius: 16, padding: "24px 16px", marginTop: 14 }}>
+            <div style={{ fontSize: 30 }}>🎟️</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "var(--teal-d)", marginTop: 8 }}>평생 {done.discount}% 할인 코드</div>
+            <div style={{ fontSize: 30, fontWeight: 800, letterSpacing: 2, color: "#20302B", margin: "14px 0", userSelect: "all" }}>{done.code}</div>
+            <button
+              className="btn"
+              style={{ background: "#fff", color: "var(--teal-d)", border: "1.5px solid var(--teal)", width: "auto", padding: "10px 20px", fontSize: 14 }}
+              onClick={copyCode}
+            >
+              {codeCopied ? "✓ 복사됐어요" : "📋 코드 복사하기"}
+            </button>
+          </div>
+
+          <div style={{ fontSize: 12.5, color: "#3f4a46", lineHeight: 1.7, marginTop: 14, textAlign: "center" }}>
+            이 코드는 <b>정식 오픈</b> 때 결제 화면에 입력하면 <b>평생 {done.discount}%</b> 할인이 적용돼요.
+          </div>
+
+          <button className="btn primary lg" style={{ marginTop: 18 }} onClick={() => router.push("/dashboard")}>캡처했어요 · 대시보드로 →</button>
         </div>
         <Footer />
       </div>
