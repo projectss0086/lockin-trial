@@ -69,6 +69,7 @@ export async function POST(req) {
     if (!input?.student?.name || !input?.learn?.what) {
       return Response.json({ error: "학생과 학습 내용을 입력해주세요." }, { status: 400 });
     }
+    const limit500 = !!input.limit500; // 500자 이내 옵션 on/off
 
     const svcClient = url && svc ? createClient(url, svc, { auth: { persistSession: false } }) : null;
 
@@ -97,13 +98,25 @@ export async function POST(req) {
     const model = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5";
     const refs = await fetchRefs(input, svcClient);
     const ownVoice = await fetchOwnVoice(svcClient, uid);
+    const seasonLine = await fetchSeasonGreeting(svcClient);
+
+    // 500자 이내 옵션: 첫인사·끝인사·계절인사를 뺀 '본문' 글자 예산을 계산해 지시로 넣음
+    let limitNote = "";
+    if (limit500) {
+      let budget = 350;
+      try {
+        const wrapperLen = wrapMessage("", input.student, seasonLine).length; // 고정 문구(인사말 등) 길이
+        budget = Math.max(150, 500 - wrapperLen - 10); // 여유 10자
+      } catch (e) {}
+      limitNote = `\n\n## [길이 제한 — 반드시 지킬 것]\n이번 피드백은 짧게 보냅니다. 첫인사·끝인사를 뺀 본문을 **공백 포함 ${budget}자 이내**로, 핵심만 담아 간결하게 쓰세요. 문장은 압축하되 따뜻함과 구체성은 잃지 마세요.`;
+    }
+
     const msg = await anthropic.messages.create({
       model, max_tokens: 1200, temperature: 1,
       system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: buildUserMessage(input) + ownVoice + refs }],
+      messages: [{ role: "user", content: buildUserMessage(input) + ownVoice + refs + limitNote }],
     });
     const body = (msg.content || []).filter((b) => b.type === "text").map((b) => b.text).join("").trim();
-    const seasonLine = await fetchSeasonGreeting(svcClient);
     const feedback = wrapMessage(body, input.student, seasonLine);
 
     // 차감: 구독 이용권 먼저 → 추가 이용권 (서버에서, 우회 불가)
