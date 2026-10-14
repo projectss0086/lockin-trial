@@ -98,6 +98,10 @@ export default function DashboardPage() {
           <button className="cb-btn" onClick={() => router.push("/pricing")}>체험 혜택 보기</button>
         </div>
 
+        <button className="btn" style={{ background: "#fff", color: "var(--teal-d)", border: "1.5px solid var(--teal)", marginBottom: 12, fontSize: 14 }} onClick={() => router.push("/enrollment")}>
+          📊 이번 달 정원 기록 · 퇴원 분석
+        </button>
+
         {isAdmin && (
           <button className="btn" style={{ background: "#2B2F2E", color: "#fff", marginBottom: 12, fontSize: 14 }} onClick={() => router.push("/admin")}>
             🔧 운영자 콘솔 (표현 관리)
