@@ -74,6 +74,7 @@ export default function FeedbackPage() {
   const [done, setDone] = useState(false);
   const [copied, setCopied] = useState(false);
   const [creditErr, setCreditErr] = useState("");
+  const [limit500, setLimit500] = useState(false); // 500자 이내로 짧게 쓰기 옵션
 
   useEffect(() => {
     (async () => {
@@ -117,7 +118,7 @@ export default function FeedbackPage() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
-        body: JSON.stringify({ academy, student, learn, fork, scene, emotion: emo, plan: plan.trim() }),
+        body: JSON.stringify({ academy, student, learn, fork, scene, emotion: emo, plan: plan.trim(), limit500 }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -256,6 +257,14 @@ export default function FeedbackPage() {
             <div style={{ fontSize: 12, color: "#9aa6a1", marginTop: 5 }}>
               적어두면 그 방향으로, 비우면 AI가 알아서 미래 비전을 담아요.
             </div>
+
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 20, padding: "13px 14px", border: "1.5px solid var(--line)", borderRadius: 12, cursor: "pointer" }}>
+              <input type="checkbox" checked={limit500} onChange={(e) => setLimit500(e.target.checked)} style={{ width: 18, height: 18, marginTop: 1, flex: "0 0 auto" }} />
+              <span style={{ fontSize: 14, color: "var(--ink)", lineHeight: 1.5 }}>
+                📏 <b>500자 이내로 짧게 쓰기</b>
+                <span style={{ display: "block", fontSize: 12, color: "#8a968f", fontWeight: 400, marginTop: 2 }}>문자가 길지 않게, 핵심만 담아 간결하게 만들어요.</span>
+              </span>
+            </label>
           </div>
           <div className="foot">
             <button className="btn primary lg"
@@ -275,7 +284,7 @@ export default function FeedbackPage() {
                 <div style={{ fontSize: 46 }}>🎟️</div>
                 <div className="h1" style={{ textAlign: "center", marginTop: 12 }}>이용권을 다 쓰셨나요?</div>
                 <div className="lead" style={{ textAlign: "center", marginTop: 10 }}>
-                  그럼 후기를 작성해주세요.<br />
+                  그럼 후기를 작성해주세요.{" "}
                   유료 버전에서 쓸 수 있는{" "}
                   <b style={{ color: "var(--teal-d)" }}>구독료 최대 30% 평생 할인권</b>을 받을 수 있어요.
                 </div>
