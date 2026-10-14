@@ -6,7 +6,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
 const GRADES = ["초1","초2","초3","초4","초5","초6","중1","중2","중3","고1","고2","고3"];
-const EMPTY = { name: "", grade: "초5", gender: "남", subject: "수학", parent_phone: "", group_name: "" };
+const ROUTES = ["소개","형제자매","네이버","블로그·카페","당근","SNS","전단지","간판","기타"]; // 유입 경로
+const EMPTY = { name: "", grade: "초5", gender: "남", subject: "수학", parent_phone: "", group_name: "", join_route: "" };
 const UNGROUPED = "미분류";
 const GSEQ = ["초1","초2","초3","초4","초5","초6","중1","중2","중3","고1","고2","고3","졸업"];
 function nextGrade(g) { const i = GSEQ.indexOf(g); return (i >= 0 && i < GSEQ.length - 1) ? GSEQ[i + 1] : g; }
@@ -93,7 +94,7 @@ export default function StudentsPage() {
 
   function startEdit(s) {
     setEditId(s.id);
-    setF({ name: s.name || "", grade: s.grade || "초5", gender: s.gender || "남", subject: s.subject || "", parent_phone: s.parent_phone || "", group_name: s.group_name || "" });
+    setF({ name: s.name || "", grade: s.grade || "초5", gender: s.gender || "남", subject: s.subject || "", parent_phone: s.parent_phone || "", group_name: s.group_name || "", join_route: s.join_route || "" });
     setPendingDel(null);
     if (typeof window !== "undefined") window.scrollTo(0, 0);
   }
@@ -105,6 +106,7 @@ export default function StudentsPage() {
     const payload = {
       name: f.name.trim(), grade: f.grade, gender: f.gender, subject: f.subject.trim(),
       parent_phone: f.parent_phone.trim(), group_name: f.group_name.trim() || null,
+      join_route: f.join_route || null,
     };
     if (editId) {
       const { data } = await supabase.from("students").update(payload).eq("id", editId).select().single();
@@ -169,6 +171,16 @@ export default function StudentsPage() {
           </div>
           <label className="fl">학부모 전화번호</label>
           <input className="tf" value={f.parent_phone} onChange={set("parent_phone")} placeholder="01012345678" inputMode="numeric" />
+
+          <label className="fl">어떻게 등록하게 됐나요? <span style={{ color: "#b7c2bd" }}>(유입 경로 · 선택)</span></label>
+          <select className="tf" value={f.join_route} onChange={set("join_route")}>
+            <option value="">선택 안 함 / 모름</option>
+            {ROUTES.map((r) => <option key={r} value={r}>{r}</option>)}
+          </select>
+          <div style={{ fontSize: 11.5, color: "#9aa6a1", marginTop: 5 }}>
+            경로별로 어떤 학생이 오래 다니는지 리포트로 분석해드려요.
+          </div>
+
           <label className="fl">그룹 · 반 · 담당 선생님 <span style={{ color: "#b7c2bd" }}>(선택)</span></label>
           <input className="tf" list="grouplist" value={f.group_name} onChange={set("group_name")} placeholder="예: 월수금 A반 / 김선생님반" />
           <datalist id="grouplist">
