@@ -8,6 +8,11 @@ import Footer from "../_components/Footer";
 const GSEQ = ["초1","초2","초3","초4","초5","초6","중1","중2","중3","고1","고2","고3","졸업"];
 const UNGROUPED = "미분류";
 
+function currentYM() {
+  const d = new Date(Date.now() + 9 * 3600 * 1000); // KST
+  return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0");
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -15,22 +20,45 @@ export default function DashboardPage() {
   const [students, setStudents] = useState([]);
   const [sortMode, setSortMode] = useState("reg");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showEnrollPopup, setShowEnrollPopup] = useState(false); // 월 1회 정원 입력 알림
 
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.replace("/login"); return; }
-      const { data: aca } = await supabase.from("academies").select("*").eq("id", session.user.id).single();
+      const uid = session.user.id;
+      const { data: aca } = await supabase.from("academies").select("*").eq("id", uid).single();
       setAcademy(aca);
       const { data: stu } = await supabase.from("students").select("*").order("created_at", { ascending: true });
       setStudents(stu || []);
       setLoading(false);
+
+      // 이번 달 정원 기록이 없고, 이번 달에 '이미 했어요'로 끈 적도 없으면 알림 팝업
+      try {
+        const ym = currentYM();
+        const { data: log } = await supabase.from("enrollment_logs").select("id").eq("academy_id", uid).eq("year_month", ym).maybeSingle();
+        let dismissed = false;
+        try { dismissed = window.localStorage.getItem(`enroll_remind_${uid}_${ym}`) === "1"; } catch (e) {}
+        if (!log && !dismissed) setShowEnrollPopup(true);
+      } catch (e) {}
+
       try {
         const res = await fetch("/api/admin?type=check", { headers: { Authorization: `Bearer ${session.access_token}` } });
         if (res.ok) setIsAdmin(true);
       } catch (e) {}
     })();
   }, [router]);
+
+  // '나중에' = 그냥 닫기 (다음 로그인 때 또 뜸)
+  function closePopup() { setShowEnrollPopup(false); }
+  // '이미 했어요' = 이번 달엔 다시 안 뜨게 표시
+  function markRecorded() {
+    try {
+      const ym = currentYM();
+      if (academy?.id) window.localStorage.setItem(`enroll_remind_${academy.id}_${ym}`, "1");
+    } catch (e) {}
+    setShowEnrollPopup(false);
+  }
 
   async function logout() { await supabase.auth.signOut(); router.replace("/login"); }
 
@@ -70,6 +98,22 @@ export default function DashboardPage() {
 
   return (
     <div className="phone">
+      {showEnrollPopup && (
+        <div onClick={closePopup} style={{ position: "fixed", inset: 0, background: "rgba(20,30,28,.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 24 }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 18, padding: "26px 22px", maxWidth: 320, width: "100%", textAlign: "center", boxShadow: "0 20px 50px rgba(0,0,0,.25)" }}>
+            <div style={{ fontSize: 40 }}>📊</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "var(--ink)", marginTop: 10 }}>이번 달 정원, 기록하셨나요?</div>
+            <div style={{ fontSize: 13.5, color: "#5a6763", lineHeight: 1.7, marginTop: 8, wordBreak: "keep-all" }}>
+              매달 재원·신입·퇴원을 남겨두시면, 분기마다 제가 리포트로 정리해 돌려드려요. 30초면 돼요.
+            </div>
+            <button className="btn primary lg" style={{ marginTop: 18 }} onClick={() => router.push("/enrollment")}>지금 입력하기 →</button>
+            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              <button className="btn ghost" style={{ flex: 1 }} onClick={markRecorded}>이미 했어요</button>
+              <button className="btn ghost" style={{ flex: 1 }} onClick={closePopup}>나중에</button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="top">
         <span className="brand">🔒 자물쇠 피드백</span>
         <span className="spacer" />
