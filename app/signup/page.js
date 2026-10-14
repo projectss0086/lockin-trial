@@ -9,6 +9,7 @@ export default function SignupPage() {
   const router = useRouter();
   const [f, setF] = useState({
     name: "", owner: "", subject: "", phone: "", address: "", pw: "", pw2: "",
+    students: "", target: "", // 현재 재원생 수 / 목표 정원
   });
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
@@ -54,7 +55,9 @@ export default function SignupPage() {
         phone: f.phone.trim(),
         address: f.address.trim(),
         login_id: loginId,
-   credits: 30, // 체험단 무료 이용권 30회
+        credits: 30, // 체험단 무료 이용권 30회
+        current_students: f.students.trim() === "" ? null : Number(f.students), // 현재 재원생 수
+        target_capacity: f.target.trim() === "" ? null : Number(f.target),      // 목표 정원
       });
     }
     setBusy(false);
@@ -81,6 +84,14 @@ export default function SignupPage() {
         <input className="tf" value={f.phone} onChange={set("phone")} placeholder="01012345678" inputMode="numeric" />
         <label className="fl">학원 주소</label>
         <input className="tf" value={f.address} onChange={set("address")} placeholder="예: 경상북도 울릉군 ㅇㅇ로 ㅇㅇ" />
+
+        <label className="fl">현재 재원생 수 <span style={{ color: "#b7c2bd" }}>(숫자만)</span></label>
+        <input className="tf" value={f.students} onChange={set("students")} placeholder="예: 32" inputMode="numeric" />
+        <label className="fl">목표 정원 <span style={{ color: "#b7c2bd" }}>(숫자만)</span></label>
+        <input className="tf" value={f.target} onChange={set("target")} placeholder="예: 50" inputMode="numeric" />
+        <div style={{ fontSize: 12, color: "#9aa6a1", marginTop: 6 }}>
+          매달 정원 변화를 기록하고, 분기마다 리포트로 돌려드려요. (비워두고 나중에 채워도 돼요.)
+        </div>
 
         <div className="idbox">
           로그인 아이디 &nbsp; <b>{loginId || "—"}</b>
