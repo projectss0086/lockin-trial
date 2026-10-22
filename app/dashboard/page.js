@@ -8,9 +8,20 @@ import Footer from "../_components/Footer";
 const GSEQ = ["초1","초2","초3","초4","초5","초6","중1","중2","중3","고1","고2","고3","졸업"];
 const UNGROUPED = "미분류";
 
+// 기능 설명 팝업에 담을 3가지
+const INTRO = [
+  { n: "1", k: "인지", t: "수업이 잘 되고 있다고 느끼게", d: "‘우리 아이가 잘 챙겨지고 있구나’ 하고 학부모가 안심하게 해요." },
+  { n: "2", k: "감정", t: "학원을 더 좋아하게", d: "학원을 향한 따뜻한 신뢰의 감정을 쌓아요." },
+  { n: "3", k: "관계", t: "학부모와 더 가깝게", d: "꾸준한 소통으로 학부모와의 관계를 단단하게 만들어요." },
+];
+
 function currentYM() {
   const d = new Date(Date.now() + 9 * 3600 * 1000); // KST
   return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0");
+}
+function currentDay() {
+  const d = new Date(Date.now() + 9 * 3600 * 1000); // KST
+  return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
 }
 
 export default function DashboardPage() {
@@ -20,6 +31,7 @@ export default function DashboardPage() {
   const [students, setStudents] = useState([]);
   const [sortMode, setSortMode] = useState("reg");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);        // 기능 설명 팝업 (하루 1회)
   const [showEnrollPopup, setShowEnrollPopup] = useState(false); // 월 1회 정원 입력 알림
 
   useEffect(() => {
@@ -33,13 +45,24 @@ export default function DashboardPage() {
       setStudents(stu || []);
       setLoading(false);
 
-      // 이번 달 정원 기록이 없고, 이번 달에 '이미 했어요'로 끈 적도 없으면 알림 팝업
+      // 기능 설명 팝업: 하루 1회 (그날 처음 대시보드에 들어왔을 때) 노출
+      const today = currentDay();
+      let introDay = "";
+      try { introDay = window.localStorage.getItem(`intro_day_${uid}`) || ""; } catch (e) {}
+      const willShowIntro = introDay !== today;
+      if (willShowIntro) {
+        setShowIntro(true);
+        try { window.localStorage.setItem(`intro_day_${uid}`, today); } catch (e) {} // 오늘은 더 안 뜨게 바로 표시
+      }
+
+      // 이번 달 정원 기록이 없고, 이번 달에 '나중에'로 넘긴 적도 없으면 알림 팝업
+      // 단, 기능 설명 팝업이 뜨는 날엔 겹치지 않게 양보
       try {
         const ym = currentYM();
         const { data: log } = await supabase.from("enrollment_logs").select("id").eq("academy_id", uid).eq("year_month", ym).maybeSingle();
         let dismissed = false;
         try { dismissed = window.localStorage.getItem(`enroll_remind_${uid}_${ym}`) === "1"; } catch (e) {}
-        if (!log && !dismissed) setShowEnrollPopup(true);
+        if (!log && !dismissed && !willShowIntro) setShowEnrollPopup(true);
       } catch (e) {}
 
       try {
@@ -48,6 +71,14 @@ export default function DashboardPage() {
       } catch (e) {}
     })();
   }, [router]);
+
+  // 기능 설명 팝업 닫기 = 오늘 하루는 다시 안 뜨게 표시 (내일 다시 노출)
+  function closeIntro() {
+    try {
+      if (academy?.id) window.localStorage.setItem(`intro_day_${academy.id}`, currentDay());
+    } catch (e) {}
+    setShowIntro(false);
+  }
 
   // '나중에' = 그냥 닫기 (다음 로그인 때 또 뜸)
   function closePopup() { setShowEnrollPopup(false); }
@@ -98,6 +129,35 @@ export default function DashboardPage() {
 
   return (
     <div className="phone">
+      {showIntro && (
+        <div onClick={closeIntro} style={{ position: "fixed", inset: 0, background: "rgba(20,30,28,.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 60, padding: 24 }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 20, padding: "26px 22px", maxWidth: 340, width: "100%", boxShadow: "0 20px 50px rgba(0,0,0,.25)" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 38 }}>🔒</div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: "var(--ink)", marginTop: 8 }}>자물쇠 피드백이 하는 일</div>
+              <div style={{ fontSize: 13, color: "#5a6763", lineHeight: 1.6, marginTop: 6, wordBreak: "keep-all" }}>
+                학부모님께 보내는 이 한 통이, 세 가지를 만들어 학생이 학원을 떠나지 않게 지켜줘요.
+              </div>
+            </div>
+
+            <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 10 }}>
+              {INTRO.map((it) => (
+                <div key={it.n} style={{ display: "flex", gap: 11, alignItems: "flex-start", border: "1.5px solid var(--line)", borderRadius: 13, padding: "12px 13px" }}>
+                  <div style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: "var(--teal-soft)", color: "var(--teal-d)", fontWeight: 800, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>{it.n}</div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: "var(--ink)" }}>
+                      <span style={{ color: "var(--teal-d)" }}>{it.k}</span> · {it.t}
+                    </div>
+                    <div style={{ fontSize: 12.5, color: "#5a6763", lineHeight: 1.55, marginTop: 3, wordBreak: "keep-all" }}>{it.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="btn primary lg" style={{ marginTop: 18 }} onClick={closeIntro}>오늘 하루 보지 않기</button>
+          </div>
+        </div>
+      )}
       {showEnrollPopup && (
         <div onClick={closePopup} style={{ position: "fixed", inset: 0, background: "rgba(20,30,28,.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 24 }}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 18, padding: "26px 22px", maxWidth: 320, width: "100%", textAlign: "center", boxShadow: "0 20px 50px rgba(0,0,0,.25)" }}>
