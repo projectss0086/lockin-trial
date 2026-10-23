@@ -75,6 +75,7 @@ export default function FeedbackPage() {
   const [copied, setCopied] = useState(false);
   const [creditErr, setCreditErr] = useState("");
   const [limit500, setLimit500] = useState(false); // 500자 이내로 짧게 쓰기 옵션
+  const [confirmCopy, setConfirmCopy] = useState(false); // 복사 전 확인 팝업
 
   useEffect(() => {
     (async () => {
@@ -104,6 +105,9 @@ export default function FeedbackPage() {
   async function copyMsg() {
     try { await navigator.clipboard.writeText(feedback); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch (e) {}
   }
+
+  // '예'를 누르면 복사, '아니오'/배경 탭은 복사 없이 닫기
+  function confirmAndCopy() { setConfirmCopy(false); copyMsg(); }
 
   async function generate() {
     if (totalCredits <= 0) {
@@ -175,6 +179,20 @@ export default function FeedbackPage() {
 
   return (
     <div className="phone">
+      {confirmCopy && (
+        <div onClick={() => setConfirmCopy(false)} style={{ position: "fixed", inset: 0, background: "rgba(20,30,28,.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 60, padding: 24 }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 18, padding: "26px 22px", maxWidth: 320, width: "100%", textAlign: "center", boxShadow: "0 20px 50px rgba(0,0,0,.25)" }}>
+            <div style={{ fontSize: 38 }}>🤖</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "var(--ink)", lineHeight: 1.7, marginTop: 12, wordBreak: "keep-all" }}>
+              AI는 실수할 수 있어요.<br />메세지에 오타나 어색한 표현은 없는지 확인하셨나요?
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
+              <button className="btn ghost" style={{ flex: 1 }} onClick={() => setConfirmCopy(false)}>아니오</button>
+              <button className="btn primary lg" style={{ flex: 1 }} onClick={confirmAndCopy}>예</button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="top">
         <button className="back" onClick={() => step > 1 && step < 4 ? setStep(step - 1) : router.push("/dashboard")}>‹</button>
         <h2>{student.name}</h2>
@@ -316,7 +334,7 @@ export default function FeedbackPage() {
           </div>
           {feedback && !editing && (
             <div className="foot">
-              <button className="btn primary lg" onClick={copyMsg}>
+              <button className="btn primary lg" onClick={() => setConfirmCopy(true)}>
                 {copied ? "✓ 복사됐어요 — 카톡·문자에 붙여넣으세요" : "📋 문자 복사하기"}
               </button>
               <div style={{ height: 10 }} />
