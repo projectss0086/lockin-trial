@@ -209,11 +209,11 @@ export default function FeedbackPage() {
             <div className="h1">학습 이야기</div>
             <div className="lead">이번 달 학습을 짧게 답해주세요. 단어·구절이면 충분해요.</div>
             <label className="fl">무엇을 배웠나요?</label>
-            <input className="tf" value={learn.what} onChange={(e) => setLearn({ ...learn, what: e.target.value })} placeholder="예: 분수의 나눗셈" />
+            <textarea className="tf" rows={2} style={{ resize: "vertical" }} value={learn.what} onChange={(e) => setLearn({ ...learn, what: e.target.value })} placeholder="예: 분수의 나눗셈" />
             <label className="fl">아이가 어떻게 반응했나요?</label>
-            <input className="tf" value={learn.react} onChange={(e) => setLearn({ ...learn, react: e.target.value })} placeholder="예: 처음엔 헷갈리다 감을 잡음" />
+            <textarea className="tf" rows={3} style={{ resize: "vertical" }} value={learn.react} onChange={(e) => setLearn({ ...learn, react: e.target.value })} placeholder="예: 처음엔 헷갈리다 감을 잡음" />
             <label className="fl">선생님 소감 또는 앞으로의 학습계획 <span style={{ color: "#b7c2bd" }}>(비워도 돼요)</span></label>
-            <input className="tf" value={learn.opinion} onChange={(e) => setLearn({ ...learn, opinion: e.target.value })} placeholder="예: 다음 달부터 응용문제 비중을 늘릴 예정 / 비워두면 AI가 채웁니다" />
+            <textarea className="tf" rows={3} style={{ resize: "vertical" }} value={learn.opinion} onChange={(e) => setLearn({ ...learn, opinion: e.target.value })} placeholder="예: 다음 달부터 응용문제 비중을 늘릴 예정 / 비워두면 AI가 채웁니다" />
           </div>
           <div className="foot">
             <button className="btn primary lg" disabled={!learn.what.trim() || !learn.react.trim()} onClick={() => setStep(2)}>다음</button>
@@ -245,11 +245,11 @@ export default function FeedbackPage() {
           <div className="pad">
             <div className="h1">{fork === "growth" ? "🌱 성장한 순간" : "💛 귀여운 에피소드"}</div>
             <label className="fl">{fork === "growth" ? "성장을 느낀 장면은?" : "귀여웠거나 인상적인 장면은?"}</label>
-            <input className="tf" value={scene} onChange={(e) => setScene(e.target.value)}
+            <textarea className="tf" rows={3} style={{ resize: "vertical" }} value={scene} onChange={(e) => setScene(e.target.value)}
               placeholder={fork === "growth" ? "예: 지루한 연산도 끝까지 붙잡고 풀어냄" : "예: 속상해하는 친구를 토닥이며 달래줌"} />
 
             <label className="fl" style={{ marginTop: 18 }}>선생님은 이때 아이에 대해 어떤 감정을 느꼈나요?</label>
-            <textarea className="tf" rows={2} value={emotion} onChange={(e) => setEmotion(e.target.value)}
+            <textarea className="tf" rows={3} style={{ resize: "vertical" }} value={emotion} onChange={(e) => setEmotion(e.target.value)}
               placeholder="예: 속상해하면서도 다음을 다짐하는 모습이 짠하면서도 대견했어요" />
             <div className="note" style={{ background: "#F4F8F6", border: "1px solid #dbe6e1", color: "#5a6763" }}>
               💡 <div>딱 떠오르지 않으면, 아래에서 눌러 담아도 돼요. (여러 개 골라도 되고, 골라서 문장으로 다듬어도 좋아요.)</div>
@@ -270,7 +270,7 @@ export default function FeedbackPage() {
             </div>
 
             <label className="fl" style={{ marginTop: 20 }}>앞으로의 계획 <span style={{ color: "#b7c2bd" }}>(생략 가능)</span></label>
-            <input className="tf" value={plan} onChange={(e) => setPlan(e.target.value)}
+            <textarea className="tf" rows={3} style={{ resize: "vertical" }} value={plan} onChange={(e) => setPlan(e.target.value)}
               placeholder={fork === "growth" ? "예: 발표 기회를 더 주며 자신감을 키워줄 계획" : "예: 이런 다정함을 칭찬하며 계속 북돋아줄 계획"} />
             <div style={{ fontSize: 12, color: "#9aa6a1", marginTop: 5 }}>
               적어두면 그 방향으로, 비우면 AI가 알아서 미래 비전을 담아요.
