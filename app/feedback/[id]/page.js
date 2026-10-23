@@ -280,7 +280,7 @@ export default function FeedbackPage() {
               <input type="checkbox" checked={limit500} onChange={(e) => setLimit500(e.target.checked)} style={{ width: 18, height: 18, marginTop: 1, flex: "0 0 auto" }} />
               <span style={{ fontSize: 14, color: "var(--ink)", lineHeight: 1.5 }}>
                 📏 <b>500자 이내로 짧게 쓰기</b>
-                <span style={{ display: "block", fontSize: 12, color: "#8a968f", fontWeight: 400, marginTop: 2 }}>문자가 길지 않게, 핵심만 담아 간결하게 만들어요.</span>
+                <span style={{ display: "block", fontSize: 12, color: "#8a968f", fontWeight: 400, marginTop: 2 }}>결제선생에 이 메세지를 넣어 보내면 미납을 줄일 수 있어요.</span>
               </span>
             </label>
           </div>
